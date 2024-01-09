@@ -31,7 +31,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
 //    externalNativeBuild {
 //        cmake {
@@ -39,6 +39,7 @@ android {
 //            version = "3.22.1"
 //        }
 //    }
+
     buildFeatures {
         viewBinding = true
     }
