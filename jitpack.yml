@@ -4,7 +4,7 @@ jdk:
 before_install:
   - echo "Downloading google-services.json for the SDK module"
   - mkdir -p sdk/src/main
-  - wget -O sdk/src/main/google-services.json 'https://raw.githubusercontent.com/tony-greel/sdkPackage/main/google-services.json'
+  - wget -O sdk/src/main/google-services.json 'https://github.com/tony-greel/sdkPackage/blob/main/sdk/src/main/google-services.json'
   - chmod +x gradlew
 
 
