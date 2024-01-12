@@ -22,7 +22,7 @@ afterEvaluate {
                 // 设置 groupId, artifactId 和 version
                 groupId = "com.fs.core"
                 artifactId = "sdk"
-                version = "1.0.2"
+                version = "1.0.3"
 
             }
         }
