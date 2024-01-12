@@ -3,6 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("stringfog")
     id("maven-publish")
+    id("com.google.gms.google-services")
+
 }
 
 tasks.register("generateSourcesJar", Jar::class) {
@@ -11,7 +13,6 @@ tasks.register("generateSourcesJar", Jar::class) {
     }
     archiveClassifier.set("sources")
 }
-
 
 afterEvaluate {
     publishing {
@@ -28,6 +29,36 @@ afterEvaluate {
         }
     }
 }
+
+// 添加 afterEvaluate 块来确保所有配置都已加载
+//afterEvaluate {
+//    // 配置发布任务
+//    publishing {
+//        // 配置发布物
+//        publications {
+//            create<MavenPublication>("release") {
+//                // 指定从哪个组件发布
+//                from(components.getByName("release"))
+//
+//                // 设置 groupId, artifactId 和 version
+//                groupId = "com.fs.core"
+//                artifactId = "sdk"
+//                version = "1.0.7"
+//
+//                // 添加生成的源码包作为构件
+//                artifact(tasks.named("generateSourcesJar"))
+//            }
+//        }
+//
+//        // 配置存储库，这里指定本地 repo 目录
+//        repositories {
+//            maven {
+//                // 指定本地仓库的路径
+//                url = uri("$buildDir/repo")
+//            }
+//        }
+//    }
+//}
 
 apply(plugin = "stringfog")
 configure<com.github.megatronking.stringfog.plugin.StringFogExtension> {
