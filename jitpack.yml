@@ -9,7 +9,7 @@ before_install:
 
 install:
   - echo "Building the project"
-  - ./gradlew clean -Pgroup=com.github.tony-greel -Pversion=master-SNAPSHOT install
+  - ./gradlew clean assembleRelease -Pgroup=com.github.tony-greel -Pversion=master-SNAPSHOT
 
 build:
   project_dir: sdk
