@@ -2,13 +2,13 @@ jdk:
   - openjdk11
 
 before_install:
-  - echo "Downloading google-services.json for the SDK module"
-  - wget -O SDK/google-services.json 'URL_TO_GOOGLE_SERVICES_JSON'
+  - echo "Downloading google-services.json for the sdk module"
+  - wget -O sdk/google-services.json 'URL_TO_GOOGLE_SERVICES_JSON'
 
 install:
   - echo "Building the project"
   - ./gradlew clean -Pgroup=com.github.tony-greel -Pversion=master-SNAPSHOT install
 
 build:
-  project_dir: SDK
-  output_directory: SDK/build/outputs/aar
+  project_dir: sdk
+  output_directory: sdk/build/outputs/aar
