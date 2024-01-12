@@ -52,6 +52,7 @@ class JsBridge(private val activity: Activity) {
 
             AppsFlyerLib.getInstance()
                 .logEvent(activity.applicationContext, eventType, eventParameters)
+            Log.d(Advantage.TAG, "eventType:$eventType")
         }
     }
 

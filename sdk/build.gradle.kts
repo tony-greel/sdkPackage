@@ -22,7 +22,7 @@ afterEvaluate {
                 // 设置 groupId, artifactId 和 version
                 groupId = "com.fs.core"
                 artifactId = "sdk"
-                version = "1.0.1"
+                version = "1.0.2"
 
             }
         }
@@ -71,18 +71,20 @@ android {
     java.toolchain {
         languageVersion.set(JavaLanguageVersion.of(17))
     }
-
 }
 
 
 dependencies {
-
     implementation("androidx.core:core-ktx:1.9.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("com.appsflyer:af-android-sdk:6.12.4")
     implementation("com.github.megatronking.stringfog:xor:5.0.0")
+
+    // Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-config")
 }
 
 

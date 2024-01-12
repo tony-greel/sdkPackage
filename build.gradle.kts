@@ -6,6 +6,8 @@ buildscript{
         classpath("com.github.oliver-jonas.unmeta:unmeta:1.0.2")
         classpath("com.github.megatronking.stringfog:xor:5.0.0")
         classpath("com.github.megatronking.stringfog:gradle-plugin:5.1.0")
+        classpath("com.google.gms:google-services:4.4.0")
+
     }
 }
 

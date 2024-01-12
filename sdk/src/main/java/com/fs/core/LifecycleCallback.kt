@@ -13,7 +13,6 @@ object LifecycleCallback :Application.ActivityLifecycleCallbacks{
     }
 
     override fun onActivityStarted(p0: Activity) {
-
     }
 
     override fun onActivityResumed(p0: Activity) {
@@ -21,11 +20,9 @@ object LifecycleCallback :Application.ActivityLifecycleCallbacks{
     }
 
     override fun onActivityPaused(p0: Activity) {
-
     }
 
     override fun onActivityStopped(p0: Activity) {
-
     }
 
     override fun onActivitySaveInstanceState(p0: Activity, p1: Bundle) {
@@ -33,6 +30,5 @@ object LifecycleCallback :Application.ActivityLifecycleCallbacks{
     }
 
     override fun onActivityDestroyed(p0: Activity) {
-
     }
 }

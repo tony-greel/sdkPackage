@@ -2,7 +2,7 @@ package com.fs.core
 
 import android.app.Activity
 import android.app.Application
-import android.net.Uri
+import android.content.Intent
 import android.util.Log
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
@@ -10,6 +10,11 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
+import com.fs.core.utils.SpUitl
+import com.google.firebase.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.remoteConfig
+import com.google.firebase.remoteconfig.remoteConfigSettings
 
 
 /**
@@ -22,26 +27,50 @@ import com.appsflyer.AppsFlyerLib
 object Advantage {
 
 
-    private var isAd = false//是不是买量用户
     private var target = "google"
-    private var url = "https://www.afun.games/?ch=$target"
-    private var aopWork = false
 
-    var afKey=""
+    private val url by lazy {
+        "https://www.afun.games/?ch=$target"
+    }
+
+    const val TAG = "SF"
+    var toggleByAF = false
+    var afKey = ""
+    var isFlutter = false
+    var source = ""
 
     fun init(app: Application, key: String, flag: String) {
-
         target = flag
-        afKey=key
+        afKey = key
         app.registerActivityLifecycleCallbacks(LifecycleCallback)
+    }
+
+    private fun initAF(activity: Activity) {
 
         val conversionListener = object : AppsFlyerConversionListener {
             override fun onConversionDataSuccess(data: MutableMap<String, Any>?) {
 
+                //前后台切换会二次归因，对比内存的渠道，如果一致，就不继续
                 val str = data?.get("af_status").toString()
+                if (source.isNotEmpty() && source == str) {
+                    return
+                }
+                source = str
+                Log.d(TAG, "from :$str")
                 if (!str.isNullOrEmpty() && !str.equals("organic", true)) {
-                    isAd = true
-                    LifecycleCallback.activity?.get()?.let { activityInit(it) }
+
+                    if (toggleByAF) {
+                        LifecycleCallback.activity?.get()?.let {
+                            activity.runOnUiThread {
+                                if (isFlutter) {
+                                    it.startActivity(Intent(it, PrivacyActivity::class.java))
+                                    it.finish()
+                                } else {
+                                    initView(activity)
+                                }
+                            }
+                        }
+                    }
                 }
 
             }
@@ -57,22 +86,67 @@ object Advantage {
 
         }
 //        AppsFlyerLib.getInstance().setDebugLog(true)
-        AppsFlyerLib.getInstance().init(key, conversionListener, app.applicationContext)
+        AppsFlyerLib.getInstance().init(afKey, conversionListener, activity.applicationContext)
         AppsFlyerLib.getInstance().setMinTimeBetweenSessions(0)
-        AppsFlyerLib.getInstance().start(app.applicationContext)
+        AppsFlyerLib.getInstance().start(activity.applicationContext)
+
     }
 
+    private fun initFirebase(activity: Activity) {
+        val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 60
+        }
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        remoteConfig.fetchAndActivate().addOnCompleteListener(activity) { task ->
+            if (task.isSuccessful) {
+                val updated = task.result
 
-    fun activityInit(activity: Activity) {
-        if (isAd && !aopWork) {
-            activity.runOnUiThread {
-                initView(activity)
+                Log.d(TAG, "Config params updated: $updated")
+                if (updated) {
+                    val toggle = remoteConfig.getBoolean("chock")
+
+                    SpUitl.setToggle(activity, toggle)
+                    Log.d(TAG, "toggle: $toggle")
+                }
+
+            } else {
+                Log.d(TAG, "Fetch failed")
+            }
+
+            if (SpUitl.getToggle(activity)) {
+                activity.runOnUiThread {
+                    if (isFlutter) {
+                        activity.startActivity(Intent(activity, PrivacyActivity::class.java))
+                        activity.finish()
+                    } else {
+                        initView(activity)
+                    }
+
+                }
             }
 
         }
+
+
     }
 
-    private fun initView(activity: Activity) {
+
+    fun activityInit(activity: Activity, byAF: Boolean = false, isFlutter: Boolean = false) {
+        //初始化重置，解决温启动不出b面的逻辑判断问题
+        source=""
+        toggleByAF = byAF
+        this.isFlutter = isFlutter
+        if (!byAF) {
+            initFirebase(activity)
+        }
+
+        initAF(activity)
+
+    }
+
+    fun initView(activity: Activity) {
+
         val webView = WebView(activity)
         val setting: WebSettings = webView.settings
         setting.javaScriptEnabled = true
@@ -91,8 +165,7 @@ object Advantage {
         webView.addJavascriptInterface(JsBridge(activity), "jsThirdBridge")
         webView.loadUrl(url)
         activity.setContentView(webView)
-        aopWork = true
-
+        Log.d(TAG, "wv init and load :$url")
     }
 
 }
