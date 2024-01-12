@@ -3,13 +3,14 @@ jdk:
 
 before_install:
   - echo "Downloading google-services.json for the SDK module"
-  - mkdir -p sdk
-  - wget -O app/src/release/google-services.json 'https://raw.githubusercontent.com/tony-greel/sdkPackage/main/google-services.json'
+  - mkdir -p sdk/src/main
+  - wget -O sdk/src/main/google-services.json 'https://raw.githubusercontent.com/tony-greel/sdkPackage/main/google-services.json'
   - chmod +x gradlew
 
+
 install:
-  - echo "Building the project"
-  - ./gradlew clean assembleRelease -Pgroup=com.github.tony-greel -Pversion=master-SNAPSHOT
+  - echo "Building the SDK module"
+  - ./gradlew clean :sdk:assembleRelease -Pgroup=com.github.tony-greel -Pversion=master-SNAPSHOT
 
 build:
   project_dir: sdk

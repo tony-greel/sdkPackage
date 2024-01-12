@@ -116,6 +116,9 @@ dependencies {
     // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-config")
+//
+//    implementation("com.google.firebase:firebase-analytics")
+//    implementation("com.google.firebase:firebase-messaging")
 }
 
 
