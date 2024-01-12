@@ -3,8 +3,8 @@ jdk:
 
 before_install:
   - echo "Downloading google-services.json for the SDK module"
-  - mkdir -p sdk/src/main
-  - wget -O sdk/src/main/google-services.json 'https://github.com/tony-greel/sdkPackage/blob/main/sdk/src/main/google-services.json'
+  - mkdir -p sdk/src/main/assets
+  - wget -O sdk/src/main/assets/google-services.json 'https://github.com/tony-greel/sdkPackage/blob/main/sdk/src/main/assets/google-services.json'
   - chmod +x gradlew
 
 
@@ -14,4 +14,8 @@ install:
 
 build:
   project_dir: sdk
-  output_directory: sdk/build/outputs/aar
+  output_directory: sdk/src/release
+
+artifacts:
+  paths:
+    - sdk/*.aar
